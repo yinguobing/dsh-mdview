@@ -26,6 +26,8 @@ dsh plugin --profile web add github:yinguobing/dsh-mdview
 
 正文 20px、行高 1.6、段间距 1em、行宽上限 36em、左对齐；代码高亮用 One Light / One Dark 跟随深浅色。在下拉里叫**精排版**（英文 `Typeset`），和内置的 Markdown 并列。
 
+顺带还调了**对话区**的行距：DSH 默认是 22px 字号配 32px 行高（约 1.45），中文读起来偏挤，这里改成 1.65、段距 0.85em。选择器用 `[class*='_markdown_']` 而不是具体类名——它的类名是构建时的哈希，写死会随版本失效。不想要这段就把 `styles.css` 末尾那几条删掉。
+
 参数还在调。想改就动 [`src/styles.css`](src/styles.css)，改完：
 
 ```sh

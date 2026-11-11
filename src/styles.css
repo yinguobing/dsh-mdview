@@ -382,3 +382,19 @@
 .mdv .hljs-link {
   text-decoration: underline;
 }
+
+/* ── 对话区正文（不属于本插件预览，是顺手替 DSH 调的）──────────
+   DSH 的聊天 Markdown 是 22px 字号配 32px 行高（1.45），中文读起来偏挤。
+   这里只动行距和段距，字号、颜色、字体一概不碰。
+   选择器用属性前缀，因为它的类名是构建时的哈希（_markdown_xxxxx）。 */
+[class*='_markdown_'] {
+  line-height: 1.65;
+}
+[class*='_markdown_'] > p,
+[class*='_markdown_'] li {
+  margin-block: 0.85em;
+}
+[class*='_markdown_'] pre,
+[class*='_markdown_'] code {
+  line-height: 1.5;
+}
