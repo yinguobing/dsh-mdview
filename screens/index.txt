@@ -1,0 +1,4 @@
+/home/xiaobai/dsh-mdview/screens/light-420.png
+/home/xiaobai/dsh-mdview/screens/light-700.png
+/home/xiaobai/dsh-mdview/screens/dark-420.png
+/home/xiaobai/dsh-mdview/screens/dark-700.png

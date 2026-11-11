@@ -1,0 +1,384 @@
+/**
+ * dsh-mdview 的排版样式。
+ *
+ * 原则：跟着 DSH 的主题 token 走（深浅色自动适配），不引入自己的配色；
+ * 只在字号、行高、间距、边框这几件事上做决定。正文 15px/1.78，标题克制，
+ * 代码与表格允许横向滚动，不让内容撑破侧栏。
+ */
+
+.mdv {
+  --mdv-ink: var(--dsw-alias-label-primary, #1d1d1f);
+  --mdv-ink-2: var(--dsw-alias-label-secondary, #5c6066);
+  --mdv-ink-3: var(--dsw-alias-label-tertiary, #8a8f95);
+  --mdv-line: var(--dsw-alias-border-l2, rgba(0, 0, 0, 0.1));
+  --mdv-line-soft: var(--dsw-alias-border-l1, rgba(0, 0, 0, 0.06));
+  --mdv-soft: var(--dsw-alias-bg-layer-2, rgba(0, 0, 0, 0.035));
+  --mdv-code-bg: var(--dsw-alias-markdown-code-block, rgba(0, 0, 0, 0.045));
+  --mdv-inline-bg: var(--dsw-alias-markdown-inline-code, rgba(0, 0, 0, 0.055));
+  --mdv-link: var(--dsw-alias-link, #0a66c2);
+  --mdv-mono: var(--ds-font-family-code, ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, monospace);
+  --mdv-sans: var(--dsh-font-family-text, -apple-system, BlinkMacSystemFont, 'PingFang SC',
+    'HarmonyOS Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif);
+
+  /* 阅读宽度上限：侧栏再拉宽，正文行宽也停在 36em（20px 字号下 ≈ 720px 内容区） */
+  max-width: 36em;
+  margin-inline: auto;
+  padding: 32px 36px 72px;
+  font-family: var(--mdv-sans);
+  /* 整页字号只在这里改；块间距跟着它算，pre/table 的小字号不会把间距缩掉 */
+  --mdv-fs: 20px;
+  --mdv-gap: calc(var(--mdv-fs) * 1.2);
+  font-size: var(--mdv-fs);
+  line-height: 1.6;
+  color: var(--mdv-ink);
+  letter-spacing: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  /* 宿主可能给内容区设了 pre-wrap：那样 HTML 里的换行会变成空行盒，把列表项撑开 */
+  white-space: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── 标题：克制，靠间距分层，不靠颜色 ───────────────────────── */
+.mdv h1,
+.mdv h2,
+.mdv h3,
+.mdv h4,
+.mdv h5,
+.mdv h6 {
+  margin: 0;
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--mdv-ink);
+  letter-spacing: 0.01em;
+}
+.mdv h1 {
+  font-size: 1.8em;
+  line-height: 1.28;
+  margin: 0.2em 0 0.5em;
+}
+.mdv h1:not(:first-child) {
+  margin-top: 1.8em;
+}
+.mdv h2 {
+  font-size: 1.4em;
+  margin: 1.7em 0 0.6em;
+  padding-bottom: 0.24em;
+  border-bottom: 1px solid var(--mdv-line-soft);
+}
+.mdv h3 {
+  font-size: 1.15em;
+  margin: 1.5em 0 0.55em;
+}
+.mdv h4 {
+  font-size: 1em;
+  margin: 1.4em 0 0.45em;
+}
+.mdv h5,
+.mdv h6 {
+  font-size: 0.95em;
+  color: var(--mdv-ink-2);
+  margin: 1.2em 0 0.35em;
+}
+.mdv > :first-child {
+  margin-top: 0;
+}
+
+/* ── 正文 ─────────────────────────────────────────────────── */
+.mdv p {
+  margin-block: var(--mdv-gap);
+}
+/* Markdown 里多余的空行有时会解析成空段落，别让它撑出视觉空隙 */
+.mdv p:empty,
+.mdv p:has(> br:only-child) {
+  display: none;
+}
+.mdv strong,
+.mdv b {
+  font-weight: 650;
+}
+.mdv em,
+.mdv i {
+  font-style: italic;
+}
+.mdv del {
+  color: var(--mdv-ink-3);
+}
+.mdv mark {
+  background: var(--dsw-alias-markdown-tag, rgba(255, 214, 102, 0.35));
+  color: inherit;
+  padding: 0 0.2em;
+  border-radius: 3px;
+}
+
+/* ── 列表 ─────────────────────────────────────────────────── */
+.mdv ul,
+.mdv ol {
+  margin-block: var(--mdv-gap);
+  padding-left: 1.4em;
+}
+.mdv li {
+  margin: 0.4em 0;
+}
+.mdv li > ul,
+.mdv li > ol {
+  margin: 0.3em 0;
+}
+.mdv li::marker {
+  color: var(--mdv-ink-3);
+}
+.mdv li:has(> input[type='checkbox']) {
+  list-style: none;
+  margin-left: -1.25em;
+}
+.mdv li > input[type='checkbox'] {
+  margin: 0 0.45em 0 0;
+  vertical-align: -0.08em;
+  accent-color: var(--mdv-link);
+}
+
+/* ── 引用 ─────────────────────────────────────────────────── */
+.mdv blockquote {
+  margin-block: var(--mdv-gap);
+  margin-inline: 0;
+  padding: 12px 16px;
+  border-left: 4px solid color-mix(in oklab, var(--mdv-ink) 20%, transparent);
+  border-radius: 0 7px 7px 0;
+  background: color-mix(in oklab, var(--mdv-ink) 3.5%, transparent);
+  color: var(--mdv-ink-2);
+}
+.mdv blockquote > :first-child {
+  margin-top: 0;
+}
+.mdv blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 代码 ─────────────────────────────────────────────────── */
+.mdv code {
+  font-family: var(--mdv-mono);
+  letter-spacing: normal;
+  font-size: 0.88em;
+  background: color-mix(in oklab, var(--mdv-ink) 8%, transparent);
+  border: 1px solid color-mix(in oklab, var(--mdv-ink) 12%, transparent);
+  border-radius: 4px;
+  padding: 0.08em 0.36em;
+}
+.mdv .mdv-code {
+  position: relative;
+  margin: 1.1em 0;
+}
+.mdv .mdv-code pre {
+  margin: 0;
+}
+.mdv .mdv-lang {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  padding: 4px 8px;
+  font-family: var(--mdv-mono);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  color: var(--mdv-ink-3);
+  text-transform: lowercase;
+  pointer-events: none;
+  user-select: none;
+}
+.mdv pre {
+  margin-block: var(--mdv-gap);
+  padding: 14px 16px;
+  background: color-mix(in oklab, var(--mdv-ink) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--mdv-ink) 10%, transparent);
+  border-radius: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  line-height: 1.55;
+  font-size: 0.88em;
+}
+.mdv pre::-webkit-scrollbar {
+  height: 8px;
+  background: transparent;
+}
+.mdv pre::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--mdv-ink) 18%, transparent);
+  border-radius: 4px;
+}
+.mdv pre::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--mdv-ink) 30%, transparent);
+}
+.mdv pre code {
+  display: block;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font-size: 1em;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* ── 表格 ─────────────────────────────────────────────────── */
+.mdv .mdv-table {
+  margin-block: var(--mdv-gap);
+  overflow-x: auto;
+}
+.mdv .mdv-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93em;
+  line-height: 1.6;
+}
+.mdv th,
+.mdv td {
+  border: 1px solid color-mix(in oklab, var(--mdv-ink) 13%, transparent);
+  padding: 7px 11px;
+  text-align: left;
+  vertical-align: top;
+}
+.mdv th {
+  background: color-mix(in oklab, var(--mdv-ink) 5%, transparent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mdv tbody tr:nth-child(even) td {
+  background: color-mix(in oklab, var(--mdv-soft) 38%, transparent);
+}
+
+/* ── 链接与图片 ───────────────────────────────────────────── */
+.mdv a {
+  color: var(--mdv-link);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--mdv-link) 32%, transparent);
+  transition: border-color 0.15s ease;
+}
+.mdv a:hover {
+  border-bottom-color: currentColor;
+}
+.mdv img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.mdv figure {
+  margin: 1.1em 0;
+}
+.mdv figcaption {
+  margin-top: 0.4em;
+  font-size: 0.85em;
+  color: var(--mdv-ink-3);
+  text-align: center;
+}
+
+/* ── 分隔线 ───────────────────────────────────────────────── */
+.mdv hr {
+  border: 0;
+  height: 1px;
+  margin-block: calc(var(--mdv-gap) * 1.6);
+  background: var(--mdv-line);
+}
+
+/* ── 脚注 ─────────────────────────────────────────────────── */
+.mdv .footnotes {
+  margin-top: 2.4em;
+  padding-top: 1em;
+  border-top: 1px solid var(--mdv-line-soft);
+  font-size: 0.9em;
+  color: var(--mdv-ink-2);
+}
+
+/* ── 错误兜底 ─────────────────────────────────────────────── */
+.mdv .mdv-error {
+  font-family: var(--mdv-mono);
+  font-size: 0.85em;
+  color: var(--dsw-alias-state-error-primary, #c0392b);
+  white-space: pre-wrap;
+}
+
+/* ── 代码高亮（One Light / One Dark 配色，跟随系统深浅色）──── */
+.mdv {
+  --hl-kw: #a626a4;
+  --hl-str: #50a14f;
+  --hl-num: #986801;
+  --hl-cmt: #a0a1a7;
+  --hl-fn: #4078f2;
+  --hl-var: #e45649;
+  --hl-type: #c18401;
+  --hl-lit: #0184bb;
+}
+@media (prefers-color-scheme: dark) {
+  .mdv {
+    --hl-kw: #c678dd;
+    --hl-str: #98c379;
+    --hl-num: #d19a66;
+    --hl-cmt: #7f848e;
+    --hl-fn: #61afef;
+    --hl-var: #e06c75;
+    --hl-type: #e5c07b;
+    --hl-lit: #56b6c2;
+  }
+}
+.mdv .hljs-comment,
+.mdv .hljs-quote {
+  color: var(--hl-cmt);
+  font-style: italic;
+}
+.mdv .hljs-doctag,
+.mdv .hljs-keyword,
+.mdv .hljs-formula {
+  color: var(--hl-kw);
+}
+.mdv .hljs-section,
+.mdv .hljs-name,
+.mdv .hljs-selector-tag,
+.mdv .hljs-deletion,
+.mdv .hljs-subst {
+  color: var(--hl-var);
+}
+.mdv .hljs-literal {
+  color: var(--hl-lit);
+}
+.mdv .hljs-string,
+.mdv .hljs-regexp,
+.mdv .hljs-addition,
+.mdv .hljs-attribute,
+.mdv .hljs-meta .hljs-string {
+  color: var(--hl-str);
+}
+.mdv .hljs-attr,
+.mdv .hljs-variable,
+.mdv .hljs-template-variable,
+.mdv .hljs-type,
+.mdv .hljs-selector-class,
+.mdv .hljs-selector-attr,
+.mdv .hljs-selector-pseudo,
+.mdv .hljs-number {
+  color: var(--hl-num);
+}
+.mdv .hljs-symbol,
+.mdv .hljs-bullet,
+.mdv .hljs-link,
+.mdv .hljs-meta,
+.mdv .hljs-selector-id,
+.mdv .hljs-title {
+  color: var(--hl-fn);
+}
+.mdv .hljs-built_in,
+.mdv .hljs-title.class_,
+.mdv .hljs-class .hljs-title {
+  color: var(--hl-type);
+}
+.mdv .hljs-emphasis {
+  font-style: italic;
+}
+.mdv .hljs-strong {
+  font-weight: 700;
+}
+.mdv .hljs-link {
+  text-decoration: underline;
+}
