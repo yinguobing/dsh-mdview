@@ -2,7 +2,8 @@
 // 用途：改样式时自己先看，不必每次都重启 dsh-web。
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import vm from 'node:vm'
-import { chromium } from '/home/xiaobai/node_modules/playwright-core/index.mjs'
+// 需要 playwright-core：npm i -D playwright-core（或用 PLAYWRIGHT_PATH 指到别处的入口）
+const { chromium } = await import(process.env.PLAYWRIGHT_PATH ?? 'playwright-core')
 
 const root = new URL('./', import.meta.url).pathname
 const out = root + 'screens'

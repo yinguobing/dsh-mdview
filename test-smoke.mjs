@@ -87,8 +87,8 @@ const a = 1
 
 const rendered = body({
   content: { kind: 'text', text: md, pages: [], eof: true },
-  resourceAddress: 'dsh-resource://file/session/s1/home/xiaobai/dsh-mdview/README.md',
-  useResource: () => ({ value: { absolutePath: '/home/xiaobai/dsh-mdview/README.md' } }),
+  resourceAddress: 'dsh-resource://file/session/s1/notes/sample.md',
+  useResource: () => ({ value: { absolutePath: '/workspace/sample.md' } }),
 })
 const html = rendered?.props?.dangerouslySetInnerHTML?.__html ?? ''
 if (!html) throw new Error('渲染结果为空')
@@ -101,7 +101,7 @@ const checks = {
   '引用块': html.includes('<blockquote>'),
   '行内代码': html.includes('<code>行内代码</code>'),
   '链接': html.includes('href="https://yinguobing.com"'),
-  '相对图片改写成 api/file': /src="http:\/\/10\.10\.10\.2:3080\/api\/file\?path=%2Fhome%2Fxiaobai%2Fdsh-mdview%2Fassets%2Fa\.png"/.test(html),
+  '相对图片改写成 api/file': /src="http:\/\/10\.10\.10\.2:3080\/api\/file\?path=%2Fworkspace%2Fassets%2Fa\.png"/.test(html),
   '样式已注入 head': stylesSeen.length === 1,
 }
 
