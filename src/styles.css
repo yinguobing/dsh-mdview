@@ -2,7 +2,7 @@
  * dsh-mdview 的排版样式。
  *
  * 原则：跟着 DSH 的主题 token 走（深浅色自动适配），不引入自己的配色；
- * 只在字号、行高、间距、边框这几件事上做决定。正文 15px/1.78，标题克制，
+ * 只在字号、行高、间距、边框这几件事上做决定。正文 20px/1.6，标题克制，
  * 代码与表格允许横向滚动，不让内容撑破侧栏。
  */
 
@@ -19,12 +19,15 @@
   --mdv-mono: var(--ds-font-family-code, ui-monospace, SFMono-Regular, 'JetBrains Mono', Menlo, monospace);
   --mdv-sans: var(--dsh-font-family-text, -apple-system, BlinkMacSystemFont, 'PingFang SC',
     'HarmonyOS Sans SC', 'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif);
+  /* 正文用「阅读面」字体：装了 dsh-theme 时它会给出 --dsh-read-font（仿宋/宋体），
+     没装就退回 DSH 的文本字体，行为跟以前一致。 */
+  --mdv-read: var(--dsh-read-font, var(--mdv-sans));
 
   /* 阅读宽度上限：侧栏再拉宽，正文行宽也停在 36em（20px 字号下 ≈ 720px 内容区） */
   max-width: 36em;
   margin-inline: auto;
   padding: 32px 36px 72px;
-  font-family: var(--mdv-sans);
+  font-family: var(--mdv-read);
   /* 整页字号只在这里改；块间距跟着它算，pre/table 的小字号不会把间距缩掉 */
   --mdv-fs: 20px;
   --mdv-gap: calc(var(--mdv-fs) * 1.2);
